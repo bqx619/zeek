@@ -76,7 +76,7 @@ void Manager::UnregisterFd(int fd)
 		}
 	}
 
-void Manager::Poll(std::vector<IOSource*>& ready, double timeout, IOSource* timeout_src)
+void Manager::Poll(std::vector<IOSource*>* ready, double timeout, IOSource* timeout_src)
 	{
 	// Because of the way timerfd works, you can't just set it to a zero
 	// timeout. That deactivates the timer. That means if the timeout
@@ -106,7 +106,7 @@ void Manager::Poll(std::vector<IOSource*>& ready, double timeout, IOSource* time
 	else if ( ret == 0 )
 		{
 		if ( timeout_src )
-			ready.insert(timeout_src);
+			ready->insert(timeout_src);
 		}
 	else
 		{
@@ -117,9 +117,9 @@ void Manager::Poll(std::vector<IOSource*>& ready, double timeout, IOSource* time
 				uint64_t elapsed;
 				read(timerfd, &elapsed, 8);
 
-				ready.clear();
+				ready->clear();
 				if ( timeout_src )
-					ready.push_back(timeout_src);
+					ready->push_back(timeout_src);
 				break;
 				}
 			else
@@ -128,7 +128,7 @@ void Manager::Poll(std::vector<IOSource*>& ready, double timeout, IOSource* time
 				if ( entry != fd_map.end() )
 					{
 					if ( pfd.revents == pfd.events )
-						ready.push_back(entry->second);
+						ready->push_back(entry->second);
 					else if ( pfd.revents == POLLNVAL )
 						reporter->InternalWarning(
 							"File descriptor %d was closed during poll()\n", pfd.fd);

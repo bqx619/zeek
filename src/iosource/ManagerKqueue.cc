@@ -71,7 +71,7 @@ void Manager::UnregisterFd(int fd)
 		}
 	}
 
-void Manager::Poll(std::vector<IOSource*>& ready, double timeout, IOSource* timeout_src)
+void Manager::Poll(std::vector<IOSource*>* ready, double timeout, IOSource* timeout_src)
 	{
 	struct timespec kqueue_timeout;
 	ConvertTimeout(timeout, kqueue_timeout);
@@ -87,7 +87,7 @@ void Manager::Poll(std::vector<IOSource*>& ready, double timeout, IOSource* time
 	else if ( ret == 0 )
 		{
 		if ( timeout_src )
-			ready.push_back(timeout_src);
+			ready->push_back(timeout_src);
 		}
 	else
 		{
@@ -99,7 +99,7 @@ void Manager::Poll(std::vector<IOSource*>& ready, double timeout, IOSource* time
 				{
 				std::map<int, IOSource*>::const_iterator it = fd_map.find(events[i].ident);
 				if ( it != fd_map.end() )
-					ready.push_back(it->second);
+					ready->push_back(it->second);
 				}
 			}
 		}

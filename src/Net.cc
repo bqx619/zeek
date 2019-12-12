@@ -277,7 +277,7 @@ void net_run()
 	while ( iosource_mgr->Size() ||
 		(BifConst::exit_only_after_terminate && ! terminating) )
 		{
-		iosource_mgr->FindReadySources(ready);
+		iosource_mgr->FindReadySources(&ready);
 
 #ifdef DEBUG
 		static int loop_counter = 0;

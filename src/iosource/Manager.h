@@ -70,7 +70,7 @@ protected:
 	 * @param timeout_src The source associated with the current timeout value.
 	 * This is typically a timer manager object.
 	 */
-	void Poll(std::vector<IOSource*>& ready, double timeout, IOSource* timeout_src) override;
+	void Poll(std::vector<IOSource*>* ready, double timeout, IOSource* timeout_src) override;
 
 private:
 

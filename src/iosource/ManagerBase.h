@@ -105,7 +105,7 @@ public:
 	 *
 	 * @param ready A vector used to return the set of sources that are ready.
 	 */
-	void FindReadySources(std::vector<IOSource*>& ready);
+	void FindReadySources(std::vector<IOSource*>* ready);
 
 	/**
 	 * Registers a file descriptor and associated IOSource with the manager
@@ -149,7 +149,7 @@ protected:
 	 * @param timeout_src The source associated with the current timeout value.
 	 * This is typically a timer manager object.
 	 */
-	virtual void Poll(std::vector<IOSource*>& ready, double timeout, IOSource* timeout_src) = 0;
+	virtual void Poll(std::vector<IOSource*>* ready, double timeout, IOSource* timeout_src) = 0;
 
 	/**
 	 * Converts a double timeout value into a timespec struct used for calls

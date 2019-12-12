@@ -85,9 +85,9 @@ void ManagerBase::Wakeup(const std::string& where)
 		wakeup->Ping(where);
 	}
 
-void ManagerBase::FindReadySources(std::vector<IOSource*>& ready)
+void ManagerBase::FindReadySources(std::vector<IOSource*>* ready)
 	{
-	ready.clear();
+	ready->clear();
 
 	// Remove sources which have gone dry. For simplicity, we only
 	// remove at most one each time.
@@ -125,7 +125,7 @@ void ManagerBase::FindReadySources(std::vector<IOSource*>& ready)
 				if ( timeout == 0 && zero_timeout_count % 100 != 0 )
 					{
 					zero_timeout_count++;
-					ready.push_back(timeout_src);
+					ready->push_back(timeout_src);
 					return;
 					}
 				}
