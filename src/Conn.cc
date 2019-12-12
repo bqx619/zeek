@@ -53,7 +53,6 @@ void ConnectionTimer::Dispatch(double t, int is_expire)
 
 uint64_t Connection::total_connections = 0;
 uint64_t Connection::current_connections = 0;
-uint64_t Connection::external_connections = 0;
 
 Connection::Connection(NetSessions* s, const ConnIDKey& k, double t, const ConnID* id,
                        uint32_t flow, const Packet* pkt,
@@ -115,23 +114,10 @@ Connection::Connection(NetSessions* s, const ConnIDKey& k, double t, const ConnI
 	++current_connections;
 	++total_connections;
 
-	std::string* tag = current_iosrc->GetCurrentTag();
-	conn_timer_mgr = tag ? new std::string(*tag) : nullptr;
-
 	if ( arg_encap )
 		encapsulation = new EncapsulationStack(*arg_encap);
 	else
 		encapsulation = 0;
-
-	if ( conn_timer_mgr )
-		{
-		++external_connections;
-		// We schedule a timer which removes this connection from memory
-		// indefinitively into the future. Ii will expire when the timer
-		// mgr is drained but not before.
-		ADD_TIMER(&Connection::RemoveConnectionTimer, 1e20, 1,
-				TIMER_REMOVE_CONNECTION);
-		}
 	}
 
 Connection::~Connection()
@@ -148,12 +134,9 @@ Connection::~Connection()
 		}
 
 	delete root_analyzer;
-	delete conn_timer_mgr;
 	delete encapsulation;
 
 	--current_connections;
-	if ( conn_timer_mgr )
-		--external_connections;
 	}
 
 void Connection::CheckEncapsulation(const EncapsulationStack* arg_encap)

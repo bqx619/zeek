@@ -103,8 +103,6 @@ public:
 
 	double Time() const		{ return t ? t : 1; }	// 1 > 0
 
-	const std::string& GetTag() const 	{ return tag; }
-
 	virtual int Size() const = 0;
 	virtual int PeakSize() const = 0;
 	virtual uint64_t CumulativeNum() const = 0;
@@ -121,7 +119,7 @@ public:
 	// IOSource API methods
 	virtual double GetNextTimeout() override { return -1; }
 	virtual void Process() override;
-	virtual const char* Tag() override { return fmt("TimerMgr %s", tag.c_str()); }
+	virtual const char* Tag() override { return "TimerMgr"; }
 
 	/**
 	 * Performs some extra initialization on a timer manager. This shouldn't
@@ -130,7 +128,7 @@ public:
 	void InitPostScript();
 
 protected:
-	explicit TimerMgr(const std::string& arg_tag);
+	TimerMgr();
 
 	virtual int DoAdvance(double t, int max_expire) = 0;
 	virtual void Remove(Timer* timer) = 0;
@@ -138,7 +136,6 @@ protected:
 	double t;
 	double last_timestamp;
 	double last_advance;
-	std::string tag;
 
 	int num_expired;
 
@@ -147,7 +144,7 @@ protected:
 
 class PQ_TimerMgr : public TimerMgr {
 public:
-	explicit PQ_TimerMgr(const std::string& arg_tag);
+	explicit PQ_TimerMgr();
 	~PQ_TimerMgr() override;
 
 	void Add(Timer* timer) override;

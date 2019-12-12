@@ -184,20 +184,6 @@ void NetSessions::NextPacket(double t, const Packet* pkt)
 		DumpPacket(pkt);
 	}
 
-int NetSessions::CheckConnectionTag(Connection* conn)
-	{
-	if ( current_iosrc->GetCurrentTag() )
-		{
-		// Packet is tagged.
-		DBG_LOG(DBG_TM, "got packet with tag %s for already"
-			"known connection, reinstantiating",
-			current_iosrc->GetCurrentTag()->c_str());
-		return 0;
-		}
-
-	return 1;
-	}
-
 static unsigned int gre_header_len(uint16_t flags)
 	{
 	unsigned int len = 4;  // Always has 2 byte flags and 2 byte protocol type.
@@ -670,14 +656,9 @@ void NetSessions::DoNextPacket(double t, const Packet* pkt, const IP_Hdr* ip_hdr
 	else
 		{
 		// We already know that connection.
-		int consistent = CheckConnectionTag(conn);
-		if ( consistent < 0 )
-			return;
-
-		if ( ! consistent || conn->IsReuse(t, data) )
+		if ( conn->IsReuse(t, data) )
 			{
-			if ( consistent )
-				conn->Event(connection_reused, 0);
+			conn->Event(connection_reused, 0);
 
 			Remove(conn);
 			conn = NewConn(key, t, &id, data, proto, ip_hdr->FlowLabel(), pkt, encapsulation);
@@ -1166,23 +1147,8 @@ Connection* NetSessions::NewConn(const ConnIDKey& k, double t, const ConnID* id,
 		return 0;
 		}
 
-	bool external = conn->IsExternal();
-
-	if ( external )
-		conn->AppendAddl(fmt("tag=%s", timer_mgr->GetTag().c_str()));
-
 	if ( new_connection )
-		{
 		conn->Event(new_connection, 0);
-
-		if ( external && connection_external )
-			{
-			conn->ConnectionEventFast(connection_external, 0, {
-				conn->BuildConnVal(),
-				new StringVal(timer_mgr->GetTag().c_str()),
-			});
-			}
-		}
 
 	return conn;
 	}

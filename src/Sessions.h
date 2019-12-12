@@ -158,13 +158,6 @@ protected:
 
 	Connection* LookupConn(const ConnectionMap& conns, const ConnIDKey& key);
 
-	// Check whether the tag of the current packet is consistent with
-	// the given connection.  Returns:
-	//    -1   if current packet is to be completely ignored.
-	//     0   if tag is not consistent and new conn should be instantiated.
-	//     1   if tag is consistent, i.e., packet is part of connection.
-	int CheckConnectionTag(Connection* conn);
-
 	// Returns true if the port corresonds to an application
 	// for which there's a Bro analyzer (even if it might not
 	// be used by the present policy script), or it's more

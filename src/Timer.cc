@@ -58,12 +58,11 @@ void Timer::Describe(ODesc* d) const
 
 unsigned int TimerMgr::current_timers[NUM_TIMER_TYPES];
 
-TimerMgr::TimerMgr(const std::string& arg_tag)
+TimerMgr::TimerMgr()
 	{
 	t = 0.0;
 	num_expired = 0;
 	last_advance = last_timestamp = 0;
-	tag = arg_tag;
 
 	if ( iosource_mgr )
 		iosource_mgr->Register(this, true);
@@ -107,7 +106,7 @@ void TimerMgr::InitPostScript()
 	}
 
 
-PQ_TimerMgr::PQ_TimerMgr(const std::string& tag) : TimerMgr(tag)
+PQ_TimerMgr::PQ_TimerMgr() : TimerMgr()
 	{
 	q = new PriorityQueue;
 	}
