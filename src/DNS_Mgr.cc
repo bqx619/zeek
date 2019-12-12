@@ -392,7 +392,6 @@ DNS_Mgr::DNS_Mgr(DNS_MgrMode arg_mode)
 	successful = 0;
 	failed = 0;
 	nb_dns = nullptr;
-	next_timestamp = -1.0;
 	}
 
 DNS_Mgr::~DNS_Mgr()
@@ -1342,7 +1341,7 @@ void DNS_Mgr::CheckAsyncHostRequest(const char* host, bool timeout)
 
 void DNS_Mgr::Flush()
 	{
-	DoProcess();
+	Process();
 
 	HostMap::iterator it;
 	for ( it = host_mappings.begin(); it != host_mappings.end(); ++it )
@@ -1362,13 +1361,15 @@ void DNS_Mgr::Flush()
 	text_mappings.clear();
 	}
 
-void DNS_Mgr::Process()
+double DNS_Mgr::GetNextTimeout()
 	{
-	DoProcess();
-	next_timestamp = -1.0;
+	if ( asyncs_timeouts.empty() )
+		return -1;
+
+	return network_time + DNS_TIMEOUT;
 	}
 
-void DNS_Mgr::DoProcess()
+void DNS_Mgr::Process()
 	{
 	if ( ! nb_dns )
 		return;

@@ -129,14 +129,11 @@ protected:
 	void CheckAsyncHostRequest(const char* host, bool timeout);
 	void CheckAsyncTextRequest(const char* host, bool timeout);
 
-	// Process outstanding requests.
-	void DoProcess();
-
 	// IOSource interface.
 	void Process() override;
 	void InitSource() override;
 	const char* Tag() override	{ return "DNS_Mgr"; }
-	double GetNextTimeout() override	{ return -1; }
+	double GetNextTimeout() override;
 
 	DNS_MgrMode mode;
 
@@ -241,7 +238,6 @@ protected:
 	unsigned long num_requests;
 	unsigned long successful;
 	unsigned long failed;
-	double next_timestamp;
 };
 
 extern DNS_Mgr* dns_mgr;
