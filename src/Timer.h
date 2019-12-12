@@ -144,7 +144,7 @@ protected:
 
 class PQ_TimerMgr : public TimerMgr {
 public:
-	explicit PQ_TimerMgr();
+	PQ_TimerMgr();
 	~PQ_TimerMgr() override;
 
 	void Add(Timer* timer) override;
