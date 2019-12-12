@@ -127,7 +127,6 @@ Manager::Manager(bool arg_reading_pcaps)
 	reading_pcaps = arg_reading_pcaps;
 	after_zeek_init = false;
 	peer_count = 0;
-	times_processed_without_idle = 0;
 	log_batch_size = 0;
 	log_batch_interval = 0;
 	log_topic_func = nullptr;

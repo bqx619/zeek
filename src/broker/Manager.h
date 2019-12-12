@@ -386,7 +386,6 @@ private:
 	bool reading_pcaps;
 	bool after_zeek_init;
 	int peer_count;
-	int times_processed_without_idle;
 
 	size_t log_batch_size;
 	double log_batch_interval;
