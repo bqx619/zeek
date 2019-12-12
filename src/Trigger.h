@@ -67,9 +67,6 @@ public:
 
 	const char* Name() const;
 
-	// Evaluates all queued Triggers.
-	static void EvaluatePending();
-
 private:
 	friend class TriggerTraversalCallback;
 	friend class TriggerTimer;

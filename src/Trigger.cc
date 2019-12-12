@@ -312,10 +312,6 @@ bool Trigger::Eval()
 	return true;
 	}
 
-void Trigger::EvaluatePending()
-	{
-	}
-
 void Trigger::Timeout()
 	{
 	if ( disabled )
